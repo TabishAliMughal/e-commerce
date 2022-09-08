@@ -1,0 +1,52 @@
+{% extends 'MainPage.html' %}
+{% block content %}
+    <div style="width:25%;text-align:center;background-color: #7d6969;margin:auto;padding:20px;">
+        <form action="{% url 'products:category' %}" method="POST">
+            <select name="category" required>
+                <option>All Products</option>
+                {% for i in categories %}
+                    <option value="{{ i.pk }}">{{ i }}</option>
+                {% endfor %}
+            </select>
+            <button>Search</button>
+            {% csrf_token %}
+        </form>
+    </div>
+    <br>
+    <div style="background-color: #7d6969;text-align: center;width:50%;margin: auto;">
+        <br>
+        <h1>{{ product.name }}</h1>
+        <img src="{{ product.picture }}" width="500px">
+        <br>
+        <br>
+        <a><span style="font-weight:bold;font-size: 25px;">{{ product.price }}</span><span style="font-size:12px;"> COM</span></a>
+        <br>
+        <br>
+        <a href="{% url 'products:category' product.category.pk %}">{{ product.category }}</a>
+        <br>
+        <br>
+        <form action="{% url 'products:cart_add' product.pk %}" method="POST">
+            <select name="quantity" required>
+                <option value="">Select QTY</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+            </select>
+            <button>Add To Cart</button>
+            {% csrf_token %}
+        </form>
+        <br>
+        <br>
+    </div>
+    <br>
+    <br>
+    <br>
+    <br>
+{% endblock %}

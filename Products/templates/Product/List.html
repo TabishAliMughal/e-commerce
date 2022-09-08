@@ -1,0 +1,27 @@
+{% extends 'MainPage.html' %}
+{% block content %}
+    <div style="width:25%;text-align:center;background-color: #7d6969;margin:auto;padding:20px;">
+        <form action="{% url 'products:category' %}" method="POST">
+            <select name="category" required>
+                <option>All Products</option>
+                {% for i in categories %}
+                    <option value="{{ i.pk }}">{{ i }}</option>
+                {% endfor %}
+            </select>
+            <button>Search</button>
+            {% csrf_token %}
+        </form>
+    </div>
+    <div style="background-color: #e5de7c;text-align: center;width:75%;margin: auto;">
+        {% for i in products %}
+            <div style="background-color: #7d6969;float: left;width:300px;padding:20px;margin:10px;text-align: center;">
+                <h2>{{ i.name }}</h2>
+                <a href="{% url 'products:detailview' i.pk %}"><img src="{{ i.picture }}" width="200px"></a>
+                <br>
+                <a><span style="font-weight:bold">{{ i.price }}</span><span style="font-size:12px;"> COM</span></a>
+                <br>
+                <a>{{ i.category }}</a>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

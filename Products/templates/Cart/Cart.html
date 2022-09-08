@@ -1,0 +1,47 @@
+{% extends "MainPage.html" %}
+{% load static %}
+{% block content %}
+    <div style="width:50%;text-align:center;background-color: #7d6969;margin:auto;padding:20px;">
+        {% if cart %}
+            <h2>Your Shopping Cart</h5>
+            <table style="width:100% ;">
+                <thead style="background-color:black ;color: white">
+                    <tr>
+                        <th>Name</th>
+                        <th>Unit Price</th>
+                        <th>Total Price</th>
+                        <th>Update</th>
+                        <th>Remove</th>
+                    </tr>
+                </thead>
+                <tbody style="background-color:rgb(163, 162, 162) ;">
+
+                    {% for i in cart %}
+                        <tr style="height: 55px">
+                            <td>{{ i.product.name }}</td>
+                            <td>{{ i.product.price }}</td>
+                            <td>{{ i.t_price }}</td>
+                            <td>
+                                <div>
+                                    <form action="{% url "products:cart_add" i.product.id %}" method="post">
+                                        {{ i.quantity.quantity }}
+                                        <input class="btn btn-outline-primary" type="submit" value="Update">
+                                        {% csrf_token %}
+                                    </form>
+                                </div>
+                            </td>
+                            <td><a class="btn btn-primary" href="{% url "products:cart_remove" i.product.id %}">Remove</a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <br>
+            <h3>Grand Total = {{ grand_total }}</h3>
+            <br>
+            <a href="{% url 'products:cart_checkout' %}"><button>Checkout</button></a>
+        {% else %}
+            <h2>Your Shopping Cart Is Empty</h2>
+        {% endif %}
+        <a href="{% url 'products:listview' %}"><button>Continue shopping</button></a>
+    </div>
+{% endblock %}

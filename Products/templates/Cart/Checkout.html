@@ -1,0 +1,28 @@
+{% extends "MainPage.html" %}
+{% load static %}
+{% block content %}
+    <div style="width:50%;text-align:center;background-color: #7d6969;margin:auto;padding:20px;">
+        <h2>Checkout</h5>
+            <a>The Total Bill Will Be {{ grand_total }}</a>
+        <form method="POST">
+            <table style="width:100% ;">
+                <tbody style="background-color:rgb(163, 162, 162) ;">
+                    <tr style="height: 55px">
+                        <td>Name</td>
+                        <td><input style="width: 80%;" type="text" name="customer" required ></td>
+                    </tr>
+                    <tr style="height: 55px">
+                        <td>Address</td>
+                        <td><input style="width: 80%;" type="text" name="address" required ></td>
+                    </tr>
+                    <tr style="height: 55px">
+                        <td>Contact</td>
+                        <td><input style="width: 80%;" type="text" name="contact" required ></td>
+                    </tr>
+                </tbody>
+            </table>
+            <button type="submit">Order</button>
+            {% csrf_token %}
+        </form>
+    </div>
+{% endblock %}
