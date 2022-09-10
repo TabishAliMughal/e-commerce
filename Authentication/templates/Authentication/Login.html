@@ -1,0 +1,33 @@
+{% extends 'MainPage.html' %}
+{% block content %}
+
+    <div style="width:50%;text-align:center;background-color: #7d6969;margin:auto;padding:20px;">
+        <h3>Login</h3>
+
+        <span>
+            {% if msg %}
+                {{ msg | safe }}
+            {% else %}
+                Add your credentials
+            {% endif %}
+        </span>
+        <form method="POST" >
+            <table style="width:100% ;">
+                <tbody style="background-color:rgb(163, 162, 162) ;">
+                    <tr style="height: 55px">
+                        <td>Username</td>
+                        <td><input type="text" name="username" placeholder="Username" style="width:80%;" required id="id_username"></td>
+                    </tr>
+                    <tr style="height: 55px">
+                        <td>Password</td>
+                        <td><input type="password" name="password" placeholder="Password" style="width:80%;" required id="id_password"></td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <button type="submit" name="login" class="btn btn-primary shadow-2 mb-4">Login</button>
+            {% csrf_token %}
+
+        </form>
+    </div>
+{% endblock %}

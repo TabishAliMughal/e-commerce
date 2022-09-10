@@ -1,0 +1,68 @@
+{% extends 'MainPage.html' %}
+{% block content %}
+    <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+    <div style="width:50%;text-align:center;background-color: #7d6969;margin:auto;padding:20px;">
+        <h3>Profile</h3>
+        <table style="width:100% ;">
+            <tbody style="background-color:rgb(163, 162, 162) ;">
+                <tr style="height: 55px">
+                    <td>User</td>
+                    <td><input type="text" name="user" placeholder="User" style="width:80%;" value="{{ request.user }}" required id="id_user" readonly></td>
+                </tr>
+                <tr style="height: 55px">
+                    <td>Email</td>
+                    <td id="email"><input type="email" name="email" placeholder="Email" style="width:67%;" required id="id_email" value="{% if request.user.email %}{{ request.user.email }}{% endif %}"><button onclick="send_mail()" type="button">Send Code</button></td>
+                    <td id="confirm" style="display:none"><input name="code" type="text" required id="id_code"></td>
+                </tr>
+                <tr style="height: 55px">
+                    <td>Contact</td>
+                    <td><input type="number" name="contact" placeholder="Contact" style="width:80%;" required id="id_contact" value="{% if form.contact.value %}{{ form.contact.value }}{% endif %}"></td>
+                </tr>
+                <tr style="height: 55px">
+                    <td>Address</td>
+                    <td><input type="text" name="address" placeholder="Address" style="width:80%;" required id="id_address" value="{% if form.address.value %}{{ form.address.value }}{% endif %}"></td>
+                </tr>
+            </tbody>
+        </table>
+        {% csrf_token %}
+        <button type="submit" onclick="submitform()" name="submit">Update</button>
+    </div>
+    <script>
+        function submitform() {
+            $.ajax({
+                type:'POST',
+                url:"{% url 'auth:profile' %}",
+                data:
+                {
+                    email:$("#id_email").val(),
+                    contact:$("#id_contact").val(),
+                    address:$("#id_address").val(),
+                    code:$("#id_code").val(),
+                    csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()
+                },
+                success:function(){
+                    alert('User Data Changed Successfully');
+                    document.getElementById('email').style.display = 'block'
+                    document.getElementById('confirm').style.display = 'none'
+                }
+            })
+        };
+        function send_mail() {
+            $.ajax({
+                type:'POST',
+                url:"{% url 'auth:email' %}",
+                data:
+                {
+                    email:$("#id_email").val(),
+                    csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()
+                },
+                success:function(){
+                    alert('Email Sent Successfully');
+
+                    document.getElementById('email').style.display = 'none'
+                    document.getElementById('confirm').style.display = 'block'
+                }
+            })
+        }
+    </script>
+{% endblock %}

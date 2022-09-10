@@ -4,23 +4,43 @@ import time
 from Products.models import Categories, Products
 from .forms import *
 from .cart import *
-import datetime
 
+def get_category():
+    v = []
+    for i in Categories.objects.all():
+        parent = []
+        if not i.parent:
+            ch1 = []
+            for k in i.children.all():
+                ch2 = []
+                for p in k.children.all():
+                    ch3 = []
+                    for q in p.children.all():
+                        ch4 = []
+                        for r in q.children.all():
+                            ch4.append({'name': r})
+                        if ch4 is not []:
+                            ch3.append({'name': q , 'children' : ch4})
+                    if ch3 is not []:
+                        ch2.append({'name':p , 'children' : ch3})
+                if ch2 is not []:
+                    ch1.append({'name':k,'children':ch2})
+            parent.append({'name':i,'children':ch1})
+            v.append(parent)
+    return v
 
 def ManageProductListView(ListView):
-    categories = Categories.objects.all()
     products = Products.objects.all()
     context = {
-        'categories' : categories ,
+        'categories' : get_category() ,
         'products' : products ,
     }
     return render(ListView , 'Product/List.html' , context)
 
 def ManageProductDetailView(DetailView , id):
-    categories = Categories.objects.all()
     product = get_object_or_404(Products , pk = id)
     context = {
-        'categories' : categories ,
+        'categories' : get_category() ,
         'product' : product ,
     }
     return render(DetailView , 'Product/Detail.html' , context)
@@ -35,7 +55,7 @@ def ManageCategoryView(CategoryView , id = None):
         except:
             return redirect('products:listview')
     context = {
-        'categories' : categories ,
+        'categories' : get_category() ,
         'products' : products ,
     }
     return render(CategoryView , 'Product/List.html' , context)
@@ -49,7 +69,6 @@ def ManageAddToCartView(AddView , id):
         cart.add(product=product,quantity=cd['quantity'],update_quantity=cd['update'])
     time.sleep(1)
     return redirect('products:cart_detail',)
-
 
 def ManageCartDetailView(DetailView):
     unorder_cart = Cart(DetailView)
@@ -68,7 +87,6 @@ def ManageCartDetailView(DetailView):
         'grand_total': grand_total,
     }
     return render(DetailView, 'Cart/Cart.html',context)
-
 
 def ManageCartRemoveView(request, id):
     cart = Cart(request)

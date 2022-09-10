@@ -3,9 +3,19 @@ from django.db import models
 
 
 class Categories(models.Model):
+    parent = models.ForeignKey('self', related_name='children', on_delete=models.CASCADE, blank = True, null=True)
     name = models.CharField(max_length = 50)
+    slug = models.SlugField(max_length=200)
+    class Meta:
+        unique_together = ('slug', 'parent',)    
+        verbose_name_plural = "categories"
     def __str__(self):
-        return self.name
+        full_path = [self.name]
+        k = self.parent
+        while k is not None:
+            full_path.append(k.name)
+            k = k.parent
+        return ' -> '.join(full_path[::-1])  
 
 class Products(models.Model):
     name = models.CharField(max_length = 50)

@@ -1,27 +1,94 @@
 {% extends 'MainPage.html' %}
 {% block content %}
-    <div style="width:25%;text-align:center;background-color: #7d6969;margin:auto;padding:20px;">
-        <form action="{% url 'products:category' %}" method="POST">
-            <select name="category" required>
-                <option>All Products</option>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <style>
+        .dropdown-submenu {
+            position: relative;
+        }
+        
+        .dropdown-submenu .dropdown-menu {
+            top: 0;
+            left: 100%;
+            margin-top: -1px;
+        }
+    </style>
+    <div style="width:35%;text-align:center;background-color: #7d6969;margin:auto;padding:20px;">
+        <div class="dropdown" style="width:min-content;">
+            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">Categories<span class="caret"></span></button>
+            <ul class="dropdown-menu">
                 {% for i in categories %}
-                    <option value="{{ i.pk }}">{{ i }}</option>
+                    {% for p in i %}
+                        {% if not p.children %}
+                            <li><a tabindex="-1" href="{% url 'products:category' p.name.pk %}">{{ p.name.name }}</a></li>
+                        {% else %}
+                            <li class="dropdown-submenu">
+                                <a class="test" tabindex="-1" href="#">{{ p.name.name }} <span class="caret"></span></a>
+                                <ul class="dropdown-menu">
+                                    {% for l in p.children %}
+                                        {% if not l.children %}
+                                            <li><a tabindex="-1" href="{% url 'products:category' l.name.pk %}">{{ l.name.name }}</a></li>
+                                        {% else %}
+                                            <li class="dropdown-submenu">
+                                                <a class="test" tabindex="-1" href="#">{{ l.name.name }} <span class="caret"></span></a>
+                                                <ul class="dropdown-menu">
+                                                    {% for m in l.children %}
+                                                        {% if not m.children %}
+                                                            <li><a tabindex="-1" href="{% url 'products:category' m.name.pk %}">{{ m.name.name }}</a></li>
+                                                        {% else %}
+                                                            <li class="dropdown-submenu">
+                                                                <a class="test" tabindex="-1" href="#">{{ m.name.name }} <span class="caret"></span></a>
+                                                                <ul class="dropdown-menu">
+                                                                    {% for n in m.children %}
+                                                                        {% if not n.children %}
+                                                                            <li><a tabindex="-1" href="{% url 'products:category' n.name.pk %}">{{ n.name.name }}</a></li>
+                                                                        {% else %}
+                                                                            <li class="dropdown-submenu">
+                                                                                <a class="test" tabindex="-1" href="#">{{ n.name.name }} <span class="caret"></span></a>
+                                                                                <ul class="dropdown-menu">
+                                                                                    {% for o in n.children %}
+                                                                                        <li><a tabindex="-1" href="{% url 'products:category' o.name.pk %}">{{ o.name.name }}</a></li>
+                                                                                    {% endfor %}
+                                                                                </ul>
+                                                                            </li>
+                                                                        {% endif %}
+                                                                    {% endfor %}
+                                                                </ul>
+                                                            </li>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </ul>
+                                            </li>
+                                        {% endif %}
+                                    {% endfor %}
+                                </ul>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
                 {% endfor %}
-            </select>
-            <button>Search</button>
-            {% csrf_token %}
-        </form>
+            </ul>
+        </div>
     </div>
     <div style="background-color: #e5de7c;text-align: center;width:75%;margin: auto;">
         {% for i in products %}
             <div style="background-color: #7d6969;float: left;width:300px;padding:20px;margin:10px;text-align: center;">
                 <h2>{{ i.name }}</h2>
-                <a href="{% url 'products:detailview' i.pk %}"><img src="{{ i.picture }}" width="200px"></a>
+                <a style="color:#000000;" href="{% url 'products:detailview' i.pk %}"><img src="{{ i.picture }}" width="200px"></a>
                 <br>
-                <a><span style="font-weight:bold">{{ i.price }}</span><span style="font-size:12px;"> COM</span></a>
+                <a style="color:#000000;"><span style="font-weight:bold">{{ i.price }}</span><span style="font-size:12px;"> COM</span></a>
                 <br>
-                <a>{{ i.category }}</a>
+                <a style="color:#000000;">{{ i.category.name }} {{ i.category.parent.name }}</a>
             </div>
         {% endfor %}
     </div>
+    <script>
+        $(document).ready(function(){
+          $('.dropdown-submenu a.test').on("click", function(e){
+            $(this).next('ul').toggle();
+            e.stopPropagation();
+            e.preventDefault();
+          });
+        });
+    </script>
 {% endblock %}

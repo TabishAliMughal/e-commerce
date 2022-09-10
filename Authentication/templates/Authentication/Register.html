@@ -1,0 +1,41 @@
+{% extends 'MainPage.html' %}
+{% block content %}
+
+    <div style="width:50%;text-align:center;background-color: #7d6969;margin:auto;padding:20px;">
+        <h3>Register</h3>
+        {% if msg1 %}
+            {{ msg1 | safe }}
+            <br><br>
+        {% endif %}
+        {% if msg2 %}
+            {{ msg2 | safe }}
+            <br><br>
+        {% endif %}
+        <form method="POST">
+            <table style="width:100% ;">
+                <tbody style="background-color:rgb(163, 162, 162) ;">
+                    <tr style="height: 55px">
+                        <td>Username</td>
+                        <td><input type="text" name="u-name" placeholder="Username" style="width:80%;" required id="id_uname"></td>
+                    </tr>
+                    <tr style="height: 55px">
+                        <td>Email</td>
+                        <td><input type="email" name="email" placeholder="Email" style="width:80%;" required id="id_email" ></td>
+                    </tr>
+                    <tr style="height: 55px">
+                        <td>Password</td>
+                        <td><input type="password" name="password1" placeholder="Password" style="width:80%;" required id="id_password1"></td>
+                    </tr>
+                    <tr style="height: 55px">
+                        <td>Confirm Password</td>
+                        <td><input type="password" name="password2" placeholder="Password" style="width:80%;" required id="id_password2"></td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <button type="submit" name="login" class="btn btn-primary shadow-2 mb-4">Register</button>
+            {% csrf_token %}
+
+        </form>
+    </div>
+{% endblock %}
